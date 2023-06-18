@@ -1,0 +1,51 @@
+# Overview
+
+Issues impact our ability to deliver standard. They subtract from the user's experience and make it less likely for users to share the product. This impacts our product more than most companies for two reasons:
+
+# Key Definitions
+
+- **Issue** - An issue is anything that prevents us from delivering an experience that meets the standard. These range from styling issues to a user being unable to use the product as intended.
+- **Severity** - The degree to which users are impacted by this issue. The following is a list of questions ordered in descending order of importance when assigning severity to an issue:
+- Does this issue prevent a user from using the product as intended?
+- Does this issue prevent a user from using the product at all?
+- Does this issue prevent a user from using the product in a way that is critical to their experience?
+- Does this issue prevent a user from using the product in a way that is important to their experience?
+- Does this issue prevent a user from using the product in a way that is nice to have in their experience?
+- Does this issue prevent a user from using the product in a way that is not important to their experience?
+- **Resolution date** - The date the issue was resolved. This is tracked as the date the resolution is deployed out to production.
+
+# Reporting Issues
+
+- Issues Discovered in Production
+- If you discover an issue in production:
+- Open an issue in the "no status" column.
+- Select the "Bug" template.
+- Add yourself as the reporter.
+- Add the current date as the "date reported".
+- Issues Discovered During QA
+- Before a release, we conduct thorough QA of the product.
+- Issues discovered during this process are divided between the main board and any other epic boards. Issues pushed to epic boards are generally considered things that we will address in a fast follow.
+- Issues Discovered from Sentry
+- An engineer will review Sentry for new issues after a release.
+- All issues should be merged together and linked to a report on the main board.
+- Issues Discovered via Users on Slack/Social Media
+- Open an issue in the "no status" column.
+- Select the "Bug" template.
+- Add yourself as the reporter.
+- Add the current date as the "date reported".
+
+## Resolving an Issue
+
+#### Researching an Issue
+- When an issue is reported, the goal for resolving it is to conduct a technical research spike on the root cause of the issue.
+- Create a sub-page on the main issue and follow the research outline.
+- You typically will generate one or more additional issues to address when researching your issue.
+
+#### Instrumenting the Product to Detect the Issue
+- Another potential outcome of resolving an issue is instrumenting the product to automatically detect this issue in the future.
+- Instrumenting the product to automatically detect issues should be seen as a higher, more impactful solution than "fixing" an issue.
+
+#### Fixing the Issue Through a Code Change
+- If there is a clear solution to the issue, fixing it through a code change is a resolution.
+- **Issues that are fixed through a code change are not considered resolved until the code change is accompanied by a test.**
+- Consider adding a method for automated detection of the issue if we were not already automatically alerted to this issue.

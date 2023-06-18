@@ -1,0 +1,8 @@
+{
+  "principles": "Guiding the Way We Work and Behave",
+  "sprintProcess": "Development",
+  "designReview": "Design Review",
+  "qa_process": "Quality Assurance",
+  "issue": "Issue",
+  "pullrequest": "Pull Request"
+}

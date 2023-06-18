@@ -1,0 +1,30 @@
+# Design Review Process
+
+Welcome to the design process and increment based on best practices. In this document, we will outline a systematic approach to design reviews and provide guidelines for effective collaboration between designers and engineers. By following this process, you can ensure that design feedback is incorporated efficiently, leading to improved UI/UX functionality and smoother development workflows.
+
+## Overview
+
+- Design review is done on a per epic task basis.
+- Design review is the responsibility of the design owner of the epic.
+- Design review should be done before the PR code review is completed (since the results of the design review can require code changes).
+- Design review feedback should be added to the existing task in the epic so that it can be executed on by the epic's engineering owner.
+- A new column should be added to the sprint board that represents when a task is in "design review".
+- Jira/Slack should be used as the primary communication medium for design feedback.
+
+## Process
+
+- When the initial implementation of a task is complete, the engineer must decide whether the task requires a design review.
+- All tasks that have added new UI/UX functionality should require a design review.
+- If the engineer decides the task requires a design review, then they should move the card to the "design review" column on the sprint board.
+- In preparation for design review, the engineer needs to make the work available on a stage.
+- For now, the engineers can use their own personal stages for this, but later we should set up CI so that it automatically deploys a new stage for each PR branch.
+- The location of where the work can be reviewed should be included on the epic task's card in Notion.
+- The engineer is responsible for alerting the designer to the fact that the task is ready for design review.
+- The engineer should communicate to the designer what requires review so that it is clear what the designer needs to provide feedback on.
+- The engineer should alert the designer through a comment in Notion and provide a link where they communicate what areas in the UI implementation need feedback.
+- Once the designer has been alerted to the need for a review, it is then their responsibility to review the work and identify any issues or changes that they would like to see made to the current implementation.
+- This feedback should be communicated in a Slack back to the engineer, and the thread link should be placed into the epic task.
+- The designer should then alert the engineer that their feedback has been given.
+- The engineer is then responsible for completing the work suggested by the designer.
+- Once the design tweaks have been made, the engineer should then move the card to the "code review" column.
+he design tweaks have been made, the engineer should then move the card to the "code review" column.

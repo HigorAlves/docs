@@ -1,0 +1,43 @@
+# Pull request Process
+
+The document outlines the process for our Pull request & Merge request process for the team.
+
+### Opening a new PR
+
+- PRs should be opened before a single line of code is written. This give us transparency into how the progress of any PR is going.
+- this may require making an initial commit to allow for the PR to be opened in GitHub/Gitlab
+- PRs should have a clear description of what features they are introducing and any major changes they are making.
+- We use the following naming convention for our PR branches
+- `feature/[useful-name || task-id]`
+- `fix/[useful-name || task-id]`
+- `improvement/[useful-name || task-id]`
+- PRs should introduce a single logical feature (usually associated with a single task in sprint board)
+- PRs should be limited to a single sprint's worth of work in order to make it easier to review the code changes in logical batches. If an epic feature is going to extend beyond a single sprint, please follow the Epic PR approach
+
+### Epic PRs
+
+- If a feature is going to take multiple sprints, we should create a single branch for that epic
+- `epic/[epic-name]`
+- The PR opened for this branch will represent the "holding" location for where the total work for the feature is held until we're ready to release the feature (merge it to dev)
+- As we work on the feature, new PRs should be opened that are based off the `epic/[epic-name]` branch. These new PRs should follow the other PR guidelines.
+
+### Committing to a PR
+
+- Commits should be made in logical increments.
+- Preferably each commit should introduce a smaller incremental change that can easily be understood.
+- Commits should have a clear commit message that outlines what they are adding. Avoid ambiguous commit messages.
+
+### PR Reviews
+
+- Each PR requires two reviews
+- One from a peer
+- One from the team architect
+- PR reviews will be broken down into smaller chunks and potentially introduced as separate reviews when the PR is large
+- Each team member should establish a time during the day to address PR comments and perform PR reviews
+- expectations are 24hrs turnaround on PR comment responses and performing initial PR reviews (does not need to be the whole review, it is ok to break out into separate reviews if it is going to take more time)
+
+### Merging a PR
+
+- Before a PR can be merged, it should be reviewed by at least two team member
+- All PRs must pass checks before they can be merged
+- Once a PR is merged, please delete origin branch
