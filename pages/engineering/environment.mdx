@@ -1,0 +1,90 @@
+# Mac OS with M1
+
+## Basics
+
+After you have a fresh new install from the latest Mac OS you need to install some basically tools to be able to configure the entire environment.
+
+Lets start with the `XCode` command lines by running the command inside your terminal this will install the `clang` `gcc` `git` .
+
+```bash
+xcode-select --install
+```
+
+Now we need to install a very useful tool named `brew` this will help us to install external packages and programs.
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+## Terminal
+
+We use `ZSH` as our terminal with `Power Level 10K` as the style guide, for the fonts you can use the `Nerd Fonts`
+
+```bash
+brew install zsh
+```
+
+After the `ZSH` installation succeed you will be able to install the `Power level 10k` the easiest way is following their tutorial, there you can find even which font to use
+
+[GitHub - romkatv/powerlevel10k: A Zsh theme](https://github.com/romkatv/powerlevel10k#installation)
+
+---
+
+## Docker
+
+Install with brew
+
+```bash
+brew install docker
+```
+
+## Node JS
+
+To be able to change and install multiple NodeJS versions you need a tool named NVM (Node Version Manager)
+
+```bash
+brew install nvm
+```
+
+After that you need to tell your terminal, in our case `zsh` that we have the `nvm` location for that you need to add this code inside your `~/.zshrc`
+
+```bash
+# NVM Brew config
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+```
+
+### Python
+
+Install `pyenv` using brew command
+
+```bash
+brew install pyenv
+```
+
+Add the variables into bash
+
+```bash
+# PyEnv config
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+```
+
+Then install and install python version `2.7.18` with
+
+```bash
+pyenv global 2.7.18
+```
+
+---
+
+## Code Editor & IDEs
+
+We recommend to use the essential tools for software developers from JetBrains they have a really nice IDEs that can help you with all programming languages, but is a paid option.
+
+[JetBrains: Developer Tools for Professionals and Teams](https://www.jetbrains.com/)
+
+If you want a free option we recommend using the
+
+[](https://code.visualstudio.com/)

@@ -1,0 +1,51 @@
+# Prepare Release
+
+- Determine next version of release `vX.X.X` (look at previous version number and increment appropriately)
+- Add any custom release steps to the release page that are necessary beyond the below instructions
+
+# Releasing the application
+
+These instructions cover how to release the web app and the backend services. The web app and backend are part of the same repo so they are released together
+
+### Preparing the Release
+
+1. On local machine, ensure you have no tracked or untracked changes, then create the release branch:
+
+> ℹ️ There are two kinds of releases. Normal releases and hotfix releases. Follow the correct section below for the steps on each.
+
+#### **Normal Release**
+
+Prepare a normal release by running the below command.
+
+ ```bash
+ yarn release major || minor || patch
+```
+
+> ℹ️ `yarn release-prepare X.X.X` will create the new release branch from the latest `dev`, bump the `package.json` versions and push the release branch to the GitLab repository.
+
+> NOTE: It will not create the tag at this time. That's done later in the release process when the release has been tested and approved.
+
+#### **Hotfix Release**
+
+If your release is for a specific bug on production that needs an immediate patch, you will base your branch off of an existing release tag.
+
+ ```bash
+ yarn release:hotfix major || minor || patch
+```
+
+>	ℹ️ `yarn release:hotfix major || minor || patch` will create a new release branch from the given `source release tag` , bump the `package.json` and `lerna.json` version and push the release branch to the bubbles Github repository
+
+>	NOTE: The key here is that you are not branching off dev, which could have changes not yet ready for production, instead you’re creating a new branch from a previous tag. Also, the new release tag will not be created at this time.
+
+2. Open a PR from `release/vX.X.X` → `master`
+ - Name PR `Release vX.X.X`
+ - PR should remain in draft mode and no reviewers should be assigned
+ - PR should not be merged until QA has passed and Product & Design have given their approval
+
+### Testing the Release
+
+Any fixes that come out of testing the release will have PRs opened against `release/vX.X.X`.
+
+### Final Sanity Check
+
+CI will check code before deployment, but it's always good to do a final sanity check before deploying to production.

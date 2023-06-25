@@ -1,0 +1,7 @@
+{
+  "epic_template": "Epic",
+  "story_template": "Story",
+  "task_template": "Task",
+  "bug_report_template": "Bug Report",
+  "pullrequest_example": "Pull Request"
+}

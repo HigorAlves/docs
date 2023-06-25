@@ -1,8 +1,8 @@
 {
-  "principles": "Guiding the Way We Work and Behave",
-  "sprintProcess": "Development",
-  "designReview": "Design Review",
-  "qa_process": "Quality Assurance",
-  "issue": "Issue",
-  "pullrequest": "Pull Request"
+  "development_lifecycle": "Development Lifecycle",
+  "gitflow": "Git Flow",
+  "code_review": "Code Review",
+  "pullrequest": "Pull Request",
+  "release": "Release",
+  "environment": "Environment"
 }
