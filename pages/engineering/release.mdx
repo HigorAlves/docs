@@ -1,3 +1,97 @@
+In this documentation, we'll outline our process for managing releases in our monorepo, which hosts both our Next.js-based
+web application and our NestJS-based backend. Our process leverages Git for versioning, Turbo for building, GitLab/GitHub
+pipelines for continuous integration/continuous deployment (CI/CD).
+
+## Project Structure
+
+Our project structure is as follows:
+
+```
+/my-monorepo
+	├── .git
+	├── .gitignore
+	├── .gitlab-ci.yml
+	├── README.md
+	├── package.json
+	├── turbo.json
+	├── yarn.lock
+	└── apps
+		├── api
+		│   ├── src
+		│   ├── test
+		│   ├── package.json
+		│   └── tsconfig.json
+		└── web
+			├── pages
+			├── public
+			├── styles
+			├── package.json
+			└── next.config.js
+```
+> This is a basic representation of our structure it can variate depending on the project.
+
+As you can see we have a monorepo with two applications, `api` and `web`. The `api` application is our backend, which is
+built with NestJS. The `web` application is our frontend, which is built with Next.js. Both applications are built with
+TypeScript.
+
+To generate the build artifacts for each application, we use Turbo. Turbo is a tool that allows us to build our applications
+independently of each other, and it also allows us to build our applications in parallel. This is important because it
+allows us to build our applications faster. Turbo also allows us to build our applications in a way that is compatible
+with GitLab/GitHub pipelines.
+
+As you can see we have another important file in our project structure, `turbo.json`. This file is used to configure Turbo,
+and it is also used to configure our GitLab/GitHub pipelines. We'll discuss this file in more detail later. But basically,
+this file tells Turbo how to build our applications, and it also tells GitLab/GitHub how to build our applications.
+
+## Versioning Process
+
+A release process often involves creating a release branch from the main branch when you are ready to prepare a new
+version of your project. This release branch allows you to isolate the release preparation, which might involve final
+testing, bug fixes, and documentation updates.
+
+`git checkout -b release/vX.X.X`
+
+Once the release is ready, a Git tag should be created to mark the specific commit that represents this release.
+Tags create points in the project history that can be easily referred back to. In this case, the tag represents a
+specific release version of the project.
+
+`git tag -a v1.0.0 -m "Release vX.X.X"`
+
+The release branch can then be merged back into the main branch, and any necessary updates can also be merged into any
+other branches that need to include the changes made for the release.
+
+```bash
+git checkout main
+git merge release/vX.X.X
+```
+
+At this point, the new release is complete, and you have a tagged version of your codebase that you can always refer back
+to. You can also use the tag to trigger specific actions in your CI/CD pipeline, such as deploying the release to a
+production environment.
+
+`git push origin --tags`
+
+The process can be repeated for each new release. Over time, you will accumulate a history of tags representing each of your project's releases.
+
+This versioning process with branches and tags allows managing releases in a systematic and controlled manner.
+You can isolate changes, manage features and fixes, prepare releases, and maintain a clear history of your project's releases.
+
+
+## Building with Turbo
+
+## Using GitLab/GitHub Pipelines
+
+### Detection Process
+
+### Building and Testing in the Pipeline
+
+## Conclusion
+
+Our release process streamlines the development and deployment of new versions of our web and backend applications.
+By automating as much as possible with tools like Turbo, GitLab pipelines, and Terraform, we can ensure that our release
+process is as smooth and error-free as possible. Always remember to thoroughly test new features before merging them into
+main to maintain the stability of our applications.
+
 # Prepare Release
 
 - Determine next version of release `vX.X.X` (look at previous version number and increment appropriately)
