@@ -49,13 +49,17 @@ A release process often involves creating a release branch from the main branch 
 version of your project. This release branch allows you to isolate the release preparation, which might involve final
 testing, bug fixes, and documentation updates.
 
-`git checkout -b release/vX.X.X`
+```bash
+git checkout -b release/vX.X.X
+```
 
 Once the release is ready, a Git tag should be created to mark the specific commit that represents this release.
 Tags create points in the project history that can be easily referred back to. In this case, the tag represents a
 specific release version of the project.
 
-`git tag -a v1.0.0 -m "Release vX.X.X"`
+```bash
+git tag -a v1.0.0 -m "Release vX.X.X"
+```
 
 The release branch can then be merged back into the main branch, and any necessary updates can also be merged into any
 other branches that need to include the changes made for the release.
@@ -69,77 +73,195 @@ At this point, the new release is complete, and you have a tagged version of you
 to. You can also use the tag to trigger specific actions in your CI/CD pipeline, such as deploying the release to a
 production environment.
 
-`git push origin --tags`
+```bash
+git push origin --tags
+```
 
 The process can be repeated for each new release. Over time, you will accumulate a history of tags representing each of your project's releases.
 
 This versioning process with branches and tags allows managing releases in a systematic and controlled manner.
 You can isolate changes, manage features and fixes, prepare releases, and maintain a clear history of your project's releases.
 
-
 ## Building with Turbo
 
-## Using GitLab/GitHub Pipelines
+[Turbo](https://turborepo.org/) is a high-performance build system for JavaScript and TypeScript codebases. It leverages the monorepo structure to optimize build times and only rebuild what's necessary based on the changes made in the repository.
 
-### Detection Process
+### Turbo Configuration
+
+The first step is to set up Turbo correctly for your monorepo. At the root of your project, there should be a `turbo.json`
+file, which is the Turbo configuration file. It should specify the tasks and pipeline to be run for your packages.
+
+```json
+{
+	"pipeline": {
+		"build": {
+			"dependsOn": ["^build"]
+		},
+		"test": {
+			"dependsOn": ["build"]
+		}
+	}
+}
+```
+
+The `dependsOn` property specifies the tasks that must be run before the current task. The `^` prefix indicates that the
+task should be run for all packages in the monorepo. If you want to run a task for a specific package, you can specify the
+package name instead of the `^` prefix.
+
+### Building with Turbo
+
+To build your packages with Turbo, you should run the following command in your terminal:
+
+```bash
+turbo run build
+```
+
+This command will execute the build task in your turbo.json configuration, building all packages.
+
+### Building Changed Packages with Turbo
+
+One of the advantages of Turbo is that it can detect which packages have changed and only build those. To build only the packages that have changed since the main branch, you can run:
+
+```bash
+turbo run build --since main
+```
+
+Or you can use the --filter changed flag:
+
+```bash
+turbo run build --no-cache --filter changed
+```
+
+This is particularly useful in CI/CD pipelines, where you often want to avoid unnecessary builds. By only building what's necessary, Turbo can significantly reduce build times.
+
+### Deploying with Turbo
+
+Like building, Turbo can deploy only the packages that have changed. To do so, you need to specify a deploy task in your turbo.json configuration and then run:
+
+```bash
+turbo run deploy --no-cache --filter changed
+```
+
+This command will deploy only the packages that have changed.
+
+# Deploying with GitHub/GitLab CI/CD
+
+`CI/CD` is a powerful tool that you can use to automate your software workflows.
+It is integrated with GitHub/GitLab and makes it easy to automate all your software workflows, including deployment.
+
+## Workflow Configuration
+
+> We will use github actions as an example but the same can be applied to gitlab.
+
+The first step is to set up a GitHub Actions workflow for your project. You can do this by creating a YAML file under
+the `.github/workflows` directory in your repository.
+
+Here's an example of a workflow configuration for a monorepo that uses Turbo to build and deploy changed applications:
+
+```yaml
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - 'release/**'
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+
+    - name: Install Dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Run Turbo
+      run: yarn turbo run build --no-cache --filter changed
+
+    - name: Deploy API
+      if: steps.turbo.outputs.apps == 'apps/api'
+      run: echo "Deploying API..."
+
+    - name: Deploy Web
+      if: steps.turbo.outputs.apps == 'apps/web'
+      run: echo "Deploying Web..."
+```
+
+This workflow runs whenever there is a push to any branch that matches the pattern 'release/**', or a new tag that starts
+with 'v' is created. It sets up the necessary environment, checks out your code, installs dependencies, and uses Turbo to
+build only the applications that have changed.
+
+Then, based on which applications have changed, it runs the deploy steps for those applications. In this example,
+it uses an if condition to check the output of the Turbo step and only runs the corresponding deploy step if that application has changed.
+
+Note: The echo "Deploying API/Web..." commands are placeholders and should be replaced with your actual deployment commands.
+
+By using `CI/CD` in conjunction with Turbo, you can automate your deployment process and ensure that you are only deploying
+the applications that have changed. This can lead to faster and more efficient deployments, as well as easier management of your monorepo.
 
 ### Building and Testing in the Pipeline
+
+Below is an example of a workflow configuration for running linting and tests in a monorepo, using Turbo to target only
+the applications that have changed:
+
+```yaml
+name: Lint and Test
+
+on: [push]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install Dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Lint changed applications
+      run: yarn turbo run lint --no-cache --filter changed
+
+    - name: Test changed applications
+      run: yarn turbo run test --no-cache --filter changed
+```
+
+This workflow runs on every push to your repository. After setting up the environment and installing dependencies,
+it runs the linting and testing tasks on the applications that have changed.
+
+Note: You will need to specify lint and test tasks in your `turbo.json` configuration for Turbo to execute these tasks. For example:
+
+```json
+{
+	"pipeline": {
+		"lint": {},
+		"test": {
+			"dependsOn": ["lint"]
+		},
+		"build": {
+			"dependsOn": ["test"]
+		}
+	}
+}
+```
+In this configuration, the lint task runs first, then the test task runs after lint, and finally the build task runs after test.
 
 ## Conclusion
 
 Our release process streamlines the development and deployment of new versions of our web and backend applications.
-By automating as much as possible with tools like Turbo, GitLab pipelines, and Terraform, we can ensure that our release
-process is as smooth and error-free as possible. Always remember to thoroughly test new features before merging them into
+By automating as much as possible with tools like Turbo, GitLab/GitHub pipelines, we can ensure that our release
+process is as smooth and error-free as possible.Always remember to thoroughly test new features before merging them into
 main to maintain the stability of our applications.
-
-# Prepare Release
-
-- Determine next version of release `vX.X.X` (look at previous version number and increment appropriately)
-- Add any custom release steps to the release page that are necessary beyond the below instructions
-
-# Releasing the application
-
-These instructions cover how to release the web app and the backend services. The web app and backend are part of the same repo so they are released together
-
-### Preparing the Release
-
-1. On local machine, ensure you have no tracked or untracked changes, then create the release branch:
-
-> ℹ️ There are two kinds of releases. Normal releases and hotfix releases. Follow the correct section below for the steps on each.
-
-#### **Normal Release**
-
-Prepare a normal release by running the below command.
-
- ```bash
- yarn release major || minor || patch
-```
-
-> ℹ️ `yarn release-prepare X.X.X` will create the new release branch from the latest `dev`, bump the `package.json` versions and push the release branch to the GitLab repository.
-
-> NOTE: It will not create the tag at this time. That's done later in the release process when the release has been tested and approved.
-
-#### **Hotfix Release**
-
-If your release is for a specific bug on production that needs an immediate patch, you will base your branch off of an existing release tag.
-
- ```bash
- yarn release:hotfix major || minor || patch
-```
-
->	ℹ️ `yarn release:hotfix major || minor || patch` will create a new release branch from the given `source release tag` , bump the `package.json` and `lerna.json` version and push the release branch to the bubbles Github repository
-
->	NOTE: The key here is that you are not branching off dev, which could have changes not yet ready for production, instead you’re creating a new branch from a previous tag. Also, the new release tag will not be created at this time.
-
-2. Open a PR from `release/vX.X.X` → `master`
- - Name PR `Release vX.X.X`
- - PR should remain in draft mode and no reviewers should be assigned
- - PR should not be merged until QA has passed and Product & Design have given their approval
-
-### Testing the Release
-
-Any fixes that come out of testing the release will have PRs opened against `release/vX.X.X`.
-
-### Final Sanity Check
-
-CI will check code before deployment, but it's always good to do a final sanity check before deploying to production.
